@@ -4,8 +4,8 @@ from PIL import Image
 import pyperclip
 
 
-def process_pic_3216(file):
-    im = Image.open(file, 'r')
+def process_pic(file_name, invert):
+    im = Image.open(file_name, 'r')
     width, height = im.size
     pic_size_local = int(width * height / 8)
     temp_hex = 0x00
@@ -18,7 +18,7 @@ def process_pic_3216(file):
             bit_count += 1
             temp_bin = 1
             for k in im.getpixel((x, y)):
-                if k > 125:
+                if ((k <= 125) & (invert == 0)) | ((k > 125) & (invert == 1)):
                     temp_bin = 0
                     break
             if temp_bin == 1:
@@ -46,7 +46,7 @@ pic_size = 0
 for file in os.listdir():
     try:
         print(file)
-        pic_data, pic_size = process_pic_3216(file)
+        pic_data, pic_size = process_pic(file, 0)
         final_list.append(pic_data)
         final_list.append(',')
         total_pics += 1
